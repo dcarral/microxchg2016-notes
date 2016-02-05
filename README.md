@@ -159,15 +159,49 @@ Conclusions:
 
 ## Microservices UX: The technical journey to microservices (Russell Miles @russmiles)
 
-- Highway to (Microservices) hell
+- Highway to (Microservices) hell (don't miss the video! ;))
 
 A definition of Microservices:
 - Funny: http://credera.com/blog/technology-insights/java/mustard-seeds-microservices
 - For real: "Loosely coupled service oriented architecture with bounded contexts"
+- I like to say: loosely coupled services that __can change__.
 
-I'd say: loosely coupled services that __can change__.
+...
+
+There are 2 fantastic lies that we use:
+1. Technical debt
+2. Refactoring
+
+...
+
+What is the single biggest force limiting the change in your software? It´s YOU and your comprehension. Software is not the things, it's the things that happen. We should focus on the activity.
+
+Some companies absolutely needed stability. (Real story as former agile coach: everyone looked like so excited to become agile, but no one could explain why. Management just wanted "to make people happy" in the company.)
+
+Some value speed. Some value adaptabilty. Some value volatility. Some value antifragility.
+
+Microservices __can__ enable speed, adaptability and antifragility. But if you go the wrong way, it won't. That's the real danger!
+
+So, how should we do these things?
+
+* Please take a look at DDD (Domain-Driven Design) if you haven't done it yet.
+
+- Events: remember it's not the things, it's the things that happen. And we have a name for that: events.
+- Aggregates: They take events and they transform them to knowledge.
+- Views: Aggregates will tell views what's happened. Views are always consistent to the events they see. By the way, don't do cross-aggregates.
+
+[__Event sourcing__](http://martinfowler.com/eaaDev/EventSourcing.html) helps you worrying less about migration of state in your system.
+
+(40 slides in 2 minutes). Everything you need to create a simple To-do list app.
+
+Developing UX for microservices is painful, is really hard. Currently I'm a product developer, and I'm currently simplifying microservices (the same way Java development has been simplified, microservices could be simplified too). If you have any idea about how to do it, please contact me. It's a good time to get involved.
+
+The book I'm working on: ["Antifragile Software: Building Adaptable Software with Microservices"](http://www.leanpub.com/antifragilesoftware)
+
 
 ## Microservices <3 Domain Driven Design, why and how? (Michael Plöd @bitboss)
+
+
 
 
 ## Cloud in your Cloud, how we build DigitalOcean (Matthew Campbell @kanwisher)
