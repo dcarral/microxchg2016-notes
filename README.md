@@ -1,6 +1,6 @@
 # microXchg 2016 - Day 2 (February 5, Berlin)
 
-Recorded talks are available at:
+Recorded talks are available at: https://www.youtube.com/channel/UCGCbB8TPtYMQmJwYVogcPjg
 
 Below you can find some notes taken live during day 2 of the conference.
 
@@ -159,6 +159,13 @@ Conclusions:
 
 ## Microservices UX: The technical journey to microservices (Russell Miles @russmiles)
 
+- Highway to (Microservices) hell
+
+A definition of Microservices:
+- Funny: http://credera.com/blog/technology-insights/java/mustard-seeds-microservices
+- For real: "Loosely coupled service oriented architecture with bounded contexts"
+
+I'd say: loosely coupled services that __can change__.
 
 ## Microservices <3 Domain Driven Design, why and how? (Michael Plöd @bitboss)
 
