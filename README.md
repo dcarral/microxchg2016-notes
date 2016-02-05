@@ -1,6 +1,8 @@
 # microXchg 2016 - Day 2 (February 5, Berlin)
 
-Find below live-taken notes of microXchg 2016 conference, day 2.
+Recorded talks are available at:
+
+Below you can find some notes taken live during day 2 of the conference.
 
 ## Wait, what!? Our microservices have actual human users? (Stefan Tilkov @stilkov)
 
@@ -9,10 +11,11 @@ Find below live-taken notes of microXchg 2016 conference, day 2.
 - Frontend could be a problem because you end up mixing pieces from different services.
 - Not every service needs an interface.
 
-Wrong assumption: "#microservices matter the most". It turns out that UI does. @stilkov opening day 2 @microxchg
+Wrong assumption: "#microservices matter the most". It turns out that UI does.
+
 Wrong assumption: "Frontend technology is an implementation detail". It's not.
 
-Microservices backend (& frontend) platform goals:
+Microservices platform goals (for both back and frontend):
   - As few assumptions as possible.
   - No implementation dependencies.
   - Small interface surface
@@ -21,46 +24,53 @@ Microservices backend (& frontend) platform goals:
   - Independent deployment (one of the distinguishing factors)
   - Autonomous operations
 
-You should pursue small frontends loosely coupled.
+You should pursue loosely coupled small frontends.
 
 According to Maciej Ceglowski (@baconmeteor), there are 2 steps to optimize web apps performance:
-1.- Make sure most important elements render first.
-2.- Stop there.
+
+1. Make sure most important elements render first.
+2. Stop there.
 
 Assumption: "Frontend monoliths are OK". Sometimes.
+
 Assumption: "JS-centric web apps can be as good as native appps". They shouldn't be as bad!.
+
 "Any sufficiently complicated JS client app contains an ad hoc, informally-specified, bug-ridden, slow implementation of half a browser". So... Don't build one single page app.
 
 Summary:
- - Few organizations are in the business of delivering APIs - UIs matter.
- - Frontend monoliths are just as good, or bad, as backend monoliths.
- - Nothing beats the browser with regards to modular frontend delivery.
+ - Few organizations are in the business of delivering APIs
+ - UIs matter
+ - Frontend monoliths are just as good, or bad, as backend monoliths
+ - Nothing beats the browser with regards to modular frontend delivery
 
 
 ## Analyzing Response Time Distributions for Microservices (Adrian Cockcroft @adrianco)
 
-It's much more challenging than just a large number of machines.
+A microservice architecture is much more challenging than just a large number of machines.
 Some tools can show the request flow across a few services.
 Interesting architectures have __a lot__ of microservices! Flow visualization is a big challenge.
 
 [spigo](github.com/adrianco/spigo) simulates protocol interactions in Go & visualizes them with D3.
+
 Open Zipkin is a common format for trace annotations.
 
 So... how can you simulate multi-service architectures?
-1.- Define an architecture in a JSON
-2.- Run Spigo
+
+1. Define an architecture in a JSON
+2. Run Spigo
 
 Reasoning about response times within complex architectures is a hard thing to think about.
-Simply adding together response times doesn't work. How do you add together distributions? Fortunately this problem has been resolved in other domains.
+Simply adding together response times doesn't work. Then, how do you add together distributions? Fortunately this problem has been resolved in other domains.
 
-www.getguesstimate.com/models/1307
-Ozzie Gooen github.com/getguesstimate/guesstimate-app (lots of model for predicting stuff). Useful (awesome) tool to add asymmetric distributions.
+Ozzie Gooen crafted [Guesstimate](github.com/getguesstimate/guesstimate-app) with lots of model for predicting stuff. Basically, it's an awesome tool to add asymmetric distributions. Take a look at www.getguesstimate.com/models/1307
 
-Spigo histogram collection using Go-Kit metrics @ adrianco/spigo/collect (wip)
+You can find a Spigo histogram collection using Go-Kit metrics @ adrianco/spigo/collect (WIP)
+
 Once you collect the histograms, you end up with a bunch of CSV files containing the measured data.
-Conference-driven development is a thing: there's a Go package for generating Guesstimate models (written @microXchg day 1). github.com/adrianco/goguesstimate
 
-What's next? Some trends to watch out:
+By the way, CDD (Conference-Driven Development) is a thing: there's a Go package for generating Guesstimate models (written @microXchg day 1) available at http://github.com/adrianco/goguesstimate
+
+So... what's next? Some trends to watch out:
 
 Serverless architectures - AWS lambda
 Teraservices - using terabytes of memory
@@ -72,30 +82,38 @@ Teraservices - using terabytes of memory
 Requirements:
 
 - Apply a well-thought logging concept
-  Use Thread Contexts / MDCs
-  Define QoS for Log Messages
-    Log messages may have different QoS
-    Use markers and filters to enable fine-grained routing of messages to dedicated appenders
-    Use filters and lookups to dynamically configure logging
+  - Use Thread Contexts / MDCs
+  - Define QoS for Log Messages:
+
+    - Log messages may have different QoS.
+    - Use markers and filters to enable fine-grained routing of messages to dedicated appenders.
+    - Use filters and lookups to dynamically configure logging.
+
+
 - Aggregate logs in different formats from different systems
+
 - Search & correlate
 
   Notice that logging has become cheaper and cheaper. Nowadays you could potentially log everything, but obviously that's not a good idea.
-  If one team builds a project and then another one handles the operational stuff, it's difficult to understand what information you actually need to operate it. It's much way easier if you have to handle the system working on production yourself.
+
+  If one team builds a project and then another one handles the operational stuff, it's difficult to understand what information you actually need to operate it. It's way easier if you have to handle the system working on production yourself.
 
   __Logstash__ provides a great platform to handle (almost) all kinds of logging needs.
+
   __ELK-Stack__: Elastic Search, Logstash & Kibana
+
   __Distributed Logstash setup__: Redis is used as a broker. Logstash shippers send to local (to them) Redis instances. Then a Logstash indexer pulls from the Redis instances, making the data available to Elastic Search. Beware! If you don't monitor this closely enough, you can go into serious trouble (e.g.: overflooding Redis instances). A possible solution might be to use Apache Kafka instead of Redis. Kafka requires a Zookeeper cluster to run though. So your infrastructure for just logging gets bigger and bigger. Be aware of operational costs!
 
 - Visualize & drill-down (Kibana comes into the game)
 
   Notice that is considered counter-productive Elastic Search with less than 60GB of memory. (aka have your infrastructure ready for the challenge)
+
   In the free version of Elastic Search you couldn't filter out private data. Elastic Shield is able to filter your data based in authorizations, Greylock for Kibana might come handy too. Besides that, at least you could use Logstash to anonymize your data.
 
 - Alerting
 
   It might be interesting to filter log stream for alerts. Simply achievable by defining rules.
-  Be careful when defining rules against log messages. Once rules are set, if afterwards you change how log messages are formatted, you're screwed. (Important to remark because a lot of developers see logging as something private to the dev. team)
+  Be careful when defining rules against log messages. Once rules are set, if afterwards you change how log messages are formatted, you're screwed. (Important to remark because a lot of developers see logging as something private to the development team)
 
 ----
 ----
