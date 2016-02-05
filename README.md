@@ -277,3 +277,33 @@ Let's elaborate each of them throughout the talk.
 To sum up, I think that DDD & microservices fit perfectly together.
 
 ## Cloud in your Cloud, how we build DigitalOcean (Matthew Campbell @kanwisher)
+
+As a matter of fact, most of our new developments are in Go.
+
+- __Monorepo__: Most controversial thing about how we work. You know, it's basically you put all your company's code into a single repo. Microservices is separation at the network level. It's the biggest accelerant in our work. The main drawback is because GitHub doesn't have a good support for this, so a lot of people get notified everytime we commit something.
+
+- __Pull request driven development__: Nothing gets commited into master. We wrote a bot so every single piece of code gets reviewed by at least 1 other colleague. For me this is the 1st step towards continuous delivery.
+
+  By the way, I think that it's a big win to limit the number of languages the teams can choose between when building a new service. Maybe 2 or 3 can be a better approach than complete freedom (so everyone can jump into any part of the codebase)
+
+- __Service Discovery__: We use Consul for discovery. It's able to scale pretty well (we run an experiment 2 months ago with thousands of servers). Small-kernel tweak in Linux kernel to increment the cache, and we were able to make it work smoothly ;) Another cool thing about Consul are the multi-region replicas, I'm a big fan!
+
+- __Artifacts__ created on every build. We have a Docker/artifact registry internally. We do Chef to do our deployments and it works really well for us.
+
+- __Feature flags__ instead of branches. Everytime you create a new feature, you create a flag for that.
+
+Let's talk about __monitoring__ now:
+
+- __Prometheus__ is built by the SoundCloud guys. 10 or 20 thousand nodes being monitored by Prometheus. What it's cool about it, it pulls for metrics. Every machine exposes an endpoint with the metrics on it. This allows us to easily create aggregates of a certain region (check out the video/slidedeck for a diagram representing it).
+
+- __Grafana__ is absolutely the best thing out there. We use it for all our internal metrics, all our internal dashboards. It finds Prometheus nodes via Consul, so we don't even need to configure Grafana.
+
+- __Structured Logging__ (aka your logs are computer-readable). Nowadays we use JSON-formatted logs. For Syslog, JSON now is the standard format.
+
+- __Kibana__'s WebUI to show our aggregated structured logs. Every microservice writes Syslog. Every region uses a RSyslog Aggregator (btw, in memory) and acts as a funnel to our Elastic Search Cluster (located at NY Data Center). Every region has a local aggregator.
+
+  It's cool to build dashboards from your structured logs.
+
+- __Distributed tracing__: we're just barely doing this. The question is: how do I know the flow of the system? We use a Transaction ID at a high level for every API call. Every microservice below it has its own child transaction ID. You can register all of this in your structured log, so you are able to aggregate them afterwards.
+
+  We're just using Kibana. The other tool I know about is Zipkin (from Google). From my point of view, it's still not mature enough (a lot of effort to set it up, it's not worth it in my opinion)
