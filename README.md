@@ -201,7 +201,79 @@ The book I'm working on: ["Antifragile Software: Building Adaptable Software wit
 
 ## Microservices <3 Domain Driven Design, why and how? (Michael Plöd @bitboss)
 
+DDD helps us with microservices in four areas:
+
+- Strategic Design
+- Large Scale Structure
+- (Internal) Building Blocks
+- Destillation
+
+Let's elaborate each of them throughout the talk.
+
+- __Strategic Design__ is mainly about the bounded context, but not exclusively. It's also about context map and some patterns around these concepts (shared kernel, customer / supplier, conformist, anticorruption layer, separate ways, open / host service, published language).
+
+  The business domain consists of a bunch of __Bounded Contexts__. Each Bounded Context contains models and maybe other contexts.
+
+  The Bounded Context by itself doesn't deliver an overview of the system. By introducing a __Context Map__ we describe the contract between models and contexts. The Concept Map is also a great starting point for future transformations.
+
+  Let's talk about several patterns regarding the interactions between these contexts:
+
+  - __Shared Kernel__: Two teams share a subset of the domain model including code and maybe the database. The shared kernel is often referred to as the core domain.
+
+  - __Customer / Supplier__: There is a customer / supplier relationship between two teams. The downstream team is considered to be the customer, sometimes with veto rights.
+
+  - __Conformist__: Integration pattern where the downstream team conforms to the model of the upstream team. There is no translation of models and no vetoing. If the upstream model is a mess, it propagates to the downstream model.
+
+  - __Anticorruption Layer__: Layer that isolates a client's model from another system's model by translation. Very interesting option when you migrate to a microservice architecture (it protects against sheet outside of the system).
+
+  - __Separate Ways__: There's no connection between the bounded contexts of a system. This allows teams to find their own solutions in their domain. Of course, this is a very good way to achieve a high dynamic way to achieve deployable-independent artifacts and so on. Of course it's difficult to achieve if coming from an existing system.
+
+  - __Open / Host Service__: Each Bounded Context offers a defined set of services that expose functionality for other systems. Any downstream system can then implement their own integration. This is especially useful for integration requirements with many other systems. This is also a pattern which comes handy when we want to integrate with other systems.
+
+  - __Published Language__: This one is quite similar to Open / Host Service. However it goes as far as to model a Domain as a common language between bounded contexts.
+
+  (Example of a context map with notation used by Eric Evans in his talks)
+
+  Convay's Law: these patterns affect teams communication.
+
+  - Customer / Supplier & Conformist => tightly coupled.
+  - Anticorruption Layer, Separate Ways & Open / Host service => independent teams
 
 
+- __Building Blocks__ help designing the internals of bounded contexts.
+
+  "Personally, I'm a big fan of the Aggregates pattern along with Entities and Value Objects."
+
+  - __Entities__ represent the core business objects of a bounded context's model. Each entity has a constant identity and its own lifecycle.
+
+  - __Value Objects__ derive their identity from their values. They don't have their own lifecycle, they inherit it from entities that are referencing them. You should always consider value objects for your domain model.
+
+    If an object can be considered an entity or a value object always depends on the (bounded) context it resides in.
+
+  - __Aggregates__ (don't underestimate its power! ;). Aggregates group entities. The Root Entity is the lead in terms of access to the object graph and lifecycle.
+
+- __Large scale structure__ helps evolving our Microservice landscapes. Here we have 3 patterns which can help us:
+
+  - __Evolving Order__:
+
+    - Let large structures evolve, don't overconstrain design principles.
+    - These large structures should be applicable across bounded contexts.
+    - However there should be some practical constraints.
+
+    Sounds familiar in a microservice environment? You should create your microservices in a way that they can evolve.
+
+  - __Responsibility Layers__: Each of these microservices is structured according to a bounded context. Inside these context developers have the chance to use building blocks. However we could structure our bounded context according to responsibilities.
+
+    If you combine this with the idea of the evolving order, you could have different rules for every kind of responsibility.
+
+    In the DDD book, they have covered responsibility layers mainly for internal structures of bounded contexts. However you can go further and apply it to broader contexts.
+
+  - __System Metaphor__ isn't gonna be covered in this talk, doesn't fit 100% in microservices and we don't have time for it.
+
+- __Destillation__: Helps extracting microservices out of an existing monolithic application.
+
+  DDD community suggests to go ahead and __identify the core domain__ in your system. The __vision statement__ defines what is in the core domain and what is not in the core domain. The nwe create a destillation document, where we describe all the details of the core domain (how it should be extracted).Next step would be to __extract subdomains__. Without a clear vision and without a clear knowledge of the business capabilities, we run the risk of not get the bounded contexts right in this place.
+
+To sum up, I think that DDD & microservices fit perfectly together.
 
 ## Cloud in your Cloud, how we build DigitalOcean (Matthew Campbell @kanwisher)
