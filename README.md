@@ -11,37 +11,37 @@ Below you can find some notes taken live during day 2 of the conference.
 - Frontend could be a problem because you end up mixing pieces from different services.
 - Not every service needs an interface.
 
-Wrong assumption: "#microservices matter the most". It turns out that UI does.
+Wrong assumptions:
+- "#microservices matter the most". It turns out that UI does.
+- "Front-end technology is an implementation detail". It's not.
 
-Wrong assumption: "Frontend technology is an implementation detail". It's not.
-
-Microservices platform goals (for both back and frontend):
-  - As few assumptions as possible.
-  - No implementation dependencies.
+Microservices platforms goals (for both back and front-end):
+  - As few assumptions as possible
+  - No implementation dependencies
   - Small interface surface
   - Based on standards
   - Parallel development
-  - Independent deployment (one of the distinguishing factors)
+  - **Independent deployment**
   - Autonomous operations
 
 You should pursue loosely coupled small frontends.
 
-According to Maciej Ceglowski (@baconmeteor), there are 2 steps to optimize web apps performance:
+According to a funny tweet from Maciej Ceglowski (@baconmeteor), there are 2 steps to optimize web apps performance:
 
 1. Make sure most important elements render first.
 2. Stop there.
 
-Assumption: "Frontend monoliths are OK". Sometimes.
+More wrong assumptions:
+- "Front-end monoliths are OK". Sometimes.
+- "JS-centric web apps can be as good as native appps". At least they shouldn't be as bad!
 
-Assumption: "JS-centric web apps can be as good as native appps". They shouldn't be as bad!.
-
-"Any sufficiently complicated JS client app contains an ad hoc, informally-specified, bug-ridden, slow implementation of half a browser". So... Don't build one single page app.
+**"Any sufficiently complicated JS client application contains an ad hoc, informally-specified, bug-ridden, slow implementation of half a browser".** So... Don't build one single page app.
 
 Summary:
  - Few organizations are in the business of delivering APIs
  - UIs matter
- - Frontend monoliths are just as good, or bad, as backend monoliths
- - Nothing beats the browser with regards to modular frontend delivery
+ - Front-end monoliths are just as good, or bad, as back-end monoliths
+ - Nothing beats the browser with regards to modular front-end delivery
 
 
 ## Analyzing Response Time Distributions for Microservices (Adrian Cockcroft @adrianco)
